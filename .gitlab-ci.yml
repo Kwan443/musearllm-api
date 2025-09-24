@@ -1,0 +1,48 @@
+variables:
+  GIT_STRATEGY: none
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+image: musearllm/maven-ssh:latest
+
+stages:
+  - build
+
+
+cache:
+  key: maven
+  paths:
+    - .m2/repository
+
+build-jar:
+  stage: build
+  tags:
+    - docker
+    - maven
+  before_script:
+    - apt-get update && apt-get install -y openssh-client
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    #
+    - echo "🔒 SSH key starts with:"
+    - head -n 2 ~/.ssh/id_rsa
+    - echo "..."
+    - tail -n 2 ~/.ssh/id_rsa
+    #
+    - ssh-keyscan git.p360tec.com >> ~/.ssh/known_hosts
+    - export GIT_SSH_COMMAND='ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no'
+    - git init
+    - git remote add origin git@git.p360tec.com:Kwan443/musearllm-api.git
+    - git fetch origin $CI_COMMIT_REF_NAME
+    - git checkout -f FETCH_HEAD
+    - cd "$CI_PROJECT_DIR"
+  script:
+    - echo "🏗️ Building JAR for branch $CI_COMMIT_BRANCH"
+    - mvn clean package #run test
+  artifacts:
+    paths:
+      - target/*.jar
+    expire_in: 1 hour
+  only:
+    - dev-stable
+    - main
+    - dev-will2

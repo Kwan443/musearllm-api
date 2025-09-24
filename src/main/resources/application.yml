@@ -1,0 +1,9 @@
+spring:
+  profiles:
+    active: main
+  config:
+    import:
+      - "classpath:application-version.properties"
+
+environment:
+  otaFileUrl: "https://${environment.domain}${server.servlet.context-path}/ota/get-file?file_type={file_type}&file_version={file_version}"

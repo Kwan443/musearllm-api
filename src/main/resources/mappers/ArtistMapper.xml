@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.musearllm.api.mapper.ArtistMapper">
+    <resultMap id="ArtistResultMap" type="com.musearllm.api.model.Artist">
+        <id property="artistId" column="artist_id" javaType="java.util.UUID" jdbcType="OTHER" typeHandler="com.musearllm.api.typehandler.UUIDTypeHandler"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="biography" column="biography" jdbcType="VARCHAR"/>
+        <result property="birthDate" column="birth_date" jdbcType="DATE"/>
+        <result property="deathDate" column="death_date" jdbcType="DATE"/>
+        <result property="nationality" column="nationality" jdbcType="VARCHAR"/>
+        <result property="wikipediaUrl" column="wikipedia_url" jdbcType="VARCHAR"/>
+        <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
+        <result property="updatedAt" column="updated_at" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <insert id="insertArtist" parameterType="com.musearllm.api.model.Artist">
+        INSERT INTO artist (
+        artist_id, name, biography, birth_date, death_date,
+        nationality, wikipedia_url, created_at, updated_at
+        ) VALUES (
+        #{artistId, typeHandler=com.musearllm.api.typehandler.UUIDTypeHandler},
+        #{name},
+        #{biography},
+        #{birthDate},
+        #{deathDate},
+        #{nationality},
+        #{wikipediaUrl},
+        #{createdAt},
+        #{updatedAt}
+        )
+    </insert>
+
+    <select id="selectArtistById" parameterType="java.util.UUID" resultMap="ArtistResultMap">
+        SELECT * FROM artist WHERE artist_id = #{artistId, typeHandler=com.musearllm.api.typehandler.UUIDTypeHandler}
+    </select>
+
+    <select id="selectAllArtists" resultMap="ArtistResultMap">
+        SELECT * FROM artist
+    </select>
+
+    <select id="selectArtistsByName" parameterType="string" resultMap="ArtistResultMap">
+        SELECT * FROM artist WHERE name LIKE CONCAT('%', #{name}, '%')
+    </select>
+
+    <select id="selectArtistsByNationality" parameterType="string" resultMap="ArtistResultMap">
+        SELECT * FROM artist WHERE nationality = #{nationality}
+    </select>
+
+    <update id="updateArtist" parameterType="com.musearllm.api.model.Artist">
+        UPDATE artist SET
+        name = #{name},
+        biography = #{biography},
+        birth_date = #{birthDate},
+        death_date = #{deathDate},
+        nationality = #{nationality},
+        wikipedia_url = #{wikipediaUrl},
+        updated_at = #{updatedAt}
+        WHERE artist_id = #{artistId, typeHandler=com.musearllm.api.typehandler.UUIDTypeHandler}
+    </update>
+
+    <delete id="deleteArtistById" parameterType="java.util.UUID">
+        DELETE FROM artist WHERE artist_id = #{artistId, typeHandler=com.musearllm.api.typehandler.UUIDTypeHandler}
+    </delete>
+
+    <select id="existsById" parameterType="java.util.UUID" resultType="boolean">
+        SELECT COUNT(*) > 0 FROM artist WHERE artist_id = #{artistId, typeHandler=com.musearllm.api.typehandler.UUIDTypeHandler}
+    </select>
+
+    <select id="countArtists" resultType="int">
+        SELECT COUNT(*) FROM artist
+    </select>
+</mapper>
