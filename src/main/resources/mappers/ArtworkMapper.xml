@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.musearllm.api.mapper.ArtworkMapper">
+    <resultMap id="ArtworkResultMap" type="com.musearllm.api.model.Artwork">
+        <id property="artworkId" column="artwork_id" javaType="java.util.UUID" jdbcType="OTHER" typeHandler="com.musearllm.api.typehandler.UUIDTypeHandler"/>
+        <result property="artistId" column="artist_id" javaType="java.util.UUID" jdbcType="OTHER" typeHandler="com.musearllm.api.typehandler.UUIDTypeHandler"/>
+        <result property="currentGalleryId" column="current_gallery_id" javaType="java.util.UUID" jdbcType="OTHER" typeHandler="com.musearllm.api.typehandler.UUIDTypeHandler"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="history" column="history" jdbcType="VARCHAR"/>
+        <result property="yearCreated" column="year_created" jdbcType="INTEGER"/>
+        <result property="medium" column="medium" jdbcType="VARCHAR"/>
+        <result property="dimensions" column="dimensions" jdbcType="VARCHAR"/>
+        <result property="origin" column="origin" jdbcType="VARCHAR"/>
+        <result property="hasArAssets" column="has_ar_assets" jdbcType="BOOLEAN"/>
+        <result property="wikipediaUrl" column="wikipedia_url" jdbcType="VARCHAR"/>
+        <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
+        <result property="updatedAt" column="updated_at" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <insert id="insertArtwork" parameterType="com.musearllm.api.model.Artwork">
+        INSERT INTO artwork (
+            artwork_id, artist_id, current_gallery_id, title, description, history,
+            year_created, medium, dimensions, origin, has_ar_assets, wikipedia_url, created_at, updated_at
+        )
+        VALUES (
+            #{artworkId, typeHandler=com.musearllm.api.typehandler.UUIDTypeHandler},
+            #{artistId, typeHandler=com.musearllm.api.typehandler.UUIDTypeHandler},
+            #{currentGalleryId, typeHandler=com.musearllm.api.typehandler.UUIDTypeHandler},
+            #{title},
+            #{description},
+            #{history},
+            #{yearCreated},
+            #{medium},
+            #{dimensions},
+            #{origin},
+            #{hasArAssets},
+            #{wikipediaUrl},
+            #{createdAt},
+            #{updatedAt}
+        )
+    </insert>
+
+    <select id="selectArtworkById" parameterType="java.util.UUID" resultMap="ArtworkResultMap">
+        SELECT * FROM artwork WHERE artwork_id = #{artworkId, typeHandler=com.musearllm.api.typehandler.UUIDTypeHandler}
+    </select>
+
+    <select id="selectAllArtworks" resultMap="ArtworkResultMap">
+        SELECT * FROM artwork
+    </select>
+
+    <select id="selectArtworksByTitle" parameterType="string" resultMap="ArtworkResultMap">
+        SELECT * FROM artwork WHERE title LIKE CONCAT('%', #{title}, '%')
+    </select>
+
+    <select id="selectArtworksByArtistId" parameterType="java.util.UUID" resultMap="ArtworkResultMap">
+        SELECT * FROM artwork WHERE artist_id = #{artistId, typeHandler=com.musearllm.api.typehandler.UUIDTypeHandler}
+    </select>
+
+    <select id="selectArtworksByGalleryId" parameterType="java.util.UUID" resultMap="ArtworkResultMap">
+        SELECT * FROM artwork WHERE current_gallery_id = #{galleryId, typeHandler=com.musearllm.api.typehandler.UUIDTypeHandler}
+    </select>
+
+    <update id="updateArtwork" parameterType="com.musearllm.api.model.Artwork">
+        UPDATE artwork SET
+            artist_id = #{artistId, typeHandler=com.musearllm.api.typehandler.UUIDTypeHandler},
+            current_gallery_id = #{currentGalleryId, typeHandler=com.musearllm.api.typehandler.UUIDTypeHandler},
+            title = #{title},
+            description = #{description},
+            history = #{history},
+            year_created = #{yearCreated},
+            medium = #{medium},
+            dimensions = #{dimensions},
+            origin = #{origin},
+            has_ar_assets = #{hasArAssets},
+            wikipedia_url = #{wikipediaUrl},
+            updated_at = #{updatedAt}
+        WHERE artwork_id = #{artworkId, typeHandler=com.musearllm.api.typehandler.UUIDTypeHandler}
+    </update>
+
+    <delete id="deleteArtworkById" parameterType="java.util.UUID">
+        DELETE FROM artwork WHERE artwork_id = #{artworkId, typeHandler=com.musearllm.api.typehandler.UUIDTypeHandler}
+    </delete>
+
+    <select id="existsById" parameterType="java.util.UUID" resultType="boolean">
+        SELECT COUNT(*) > 0 FROM artwork WHERE artwork_id = #{artworkId, typeHandler=com.musearllm.api.typehandler.UUIDTypeHandler}
+    </select>
+
+    <select id="countArtworks" resultType="int">
+        SELECT COUNT(*) FROM artwork
+    </select>
+</mapper>
