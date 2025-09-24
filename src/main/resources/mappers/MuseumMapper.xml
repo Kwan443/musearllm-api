@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.musearllm.api.mapper.MuseumMapper">
+    <resultMap id="MuseumResultMap" type="com.musearllm.api.model.Museum">
+        <id property="museumId" column="museum_id" javaType="java.util.UUID" jdbcType="OTHER" typeHandler="com.musearllm.api.typehandler.UUIDTypeHandler"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="address" column="address" jdbcType="VARCHAR"/>
+        <result property="operatingHours" column="operating_hours" javaType="com.fasterxml.jackson.databind.JsonNode" jdbcType="OTHER" typeHandler="com.musearllm.api.typehandler.JsonNodeTypeHandler"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
+        <result property="updatedAt" column="updated_at" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <insert id="insertMuseum" parameterType="com.musearllm.api.model.Museum">
+        INSERT INTO museum (museum_id, name, address, operating_hours, description, created_at, updated_at)
+        VALUES (
+        #{museumId, typeHandler=com.musearllm.api.typehandler.UUIDTypeHandler},
+        #{name},
+        #{address},
+        #{operatingHours, typeHandler=com.musearllm.api.typehandler.JsonNodeTypeHandler},
+        #{description},
+        #{createdAt},
+        #{updatedAt}
+        )
+    </insert>
+
+    <select id="selectMuseumById" parameterType="java.util.UUID" resultMap="MuseumResultMap">
+        SELECT * FROM museum WHERE museum_id = #{museumId, typeHandler=com.musearllm.api.typehandler.UUIDTypeHandler}
+    </select>
+
+    <select id="selectAllMuseums" resultMap="MuseumResultMap">
+        SELECT * FROM museum
+    </select>
+
+    <select id="selectMuseumsByName" parameterType="string" resultMap="MuseumResultMap">
+        SELECT * FROM museum WHERE name LIKE CONCAT('%', #{name}, '%')
+    </select>
+
+    <update id="updateMuseum" parameterType="com.musearllm.api.model.Museum">
+        UPDATE museum SET
+        name = #{name},
+        address = #{address},
+        operating_hours = #{operatingHours, typeHandler=com.musearllm.api.typehandler.JsonNodeTypeHandler},
+        description = #{description},
+        updated_at = #{updatedAt}
+        WHERE museum_id = #{museumId, typeHandler=com.musearllm.api.typehandler.UUIDTypeHandler}
+    </update>
+
+    <delete id="deleteMuseumById" parameterType="java.util.UUID">
+        DELETE FROM museum WHERE museum_id = #{museumId, typeHandler=com.musearllm.api.typehandler.UUIDTypeHandler}
+    </delete>
+
+    <select id="existsById" parameterType="java.util.UUID" resultType="boolean">
+        SELECT COUNT(*) > 0 FROM museum WHERE museum_id = #{museumId, typeHandler=com.musearllm.api.typehandler.UUIDTypeHandler}
+    </select>
+
+    <select id="countMuseums" resultType="int">
+        SELECT COUNT(*) FROM museum
+    </select>
+</mapper>
