@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.musearllm.api.mapper.GalleryMapper">
+    <resultMap id="GalleryResultMap" type="com.musearllm.api.model.Gallery">
+        <id property="galleryId" column="gallery_id" javaType="java.util.UUID" jdbcType="OTHER" typeHandler="com.musearllm.api.typehandler.UUIDTypeHandler"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="floorNumber" column="floor_number" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
+        <result property="updatedAt" column="updated_at" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <insert id="insertGallery" parameterType="com.musearllm.api.model.Gallery">
+        INSERT INTO gallery (gallery_id, name, floor_number, description, created_at, updated_at)
+        VALUES (
+        #{galleryId, typeHandler=com.musearllm.api.typehandler.UUIDTypeHandler},
+        #{name},
+        #{floorNumber},
+        #{description},
+        #{createdAt},
+        #{updatedAt}
+        )
+    </insert>
+
+    <select id="selectGalleryById" parameterType="java.util.UUID" resultMap="GalleryResultMap">
+        SELECT * FROM gallery WHERE gallery_id = #{galleryId, typeHandler=com.musearllm.api.typehandler.UUIDTypeHandler}
+    </select>
+
+    <select id="selectAllGalleries" resultMap="GalleryResultMap">
+        SELECT * FROM gallery
+    </select>
+
+    <update id="updateGallery" parameterType="com.musearllm.api.model.Gallery">
+        UPDATE gallery SET
+        name = #{name},
+        floor_number = #{floorNumber},
+        description = #{description},
+        updated_at = #{updatedAt}
+        WHERE gallery_id = #{galleryId, typeHandler=com.musearllm.api.typehandler.UUIDTypeHandler}
+    </update>
+
+    <delete id="deleteGalleryById" parameterType="java.util.UUID">
+        DELETE FROM gallery WHERE gallery_id = #{galleryId, typeHandler=com.musearllm.api.typehandler.UUIDTypeHandler}
+    </delete>
+
+    <select id="existsById" parameterType="java.util.UUID" resultType="boolean">
+        SELECT COUNT(*) > 0 FROM gallery WHERE gallery_id = #{galleryId, typeHandler=com.musearllm.api.typehandler.UUIDTypeHandler}
+    </select>
+
+    <select id="countGalleries" resultType="int">
+        SELECT COUNT(*) FROM gallery
+    </select>
+</mapper>
