@@ -182,3 +182,7 @@ mvnd clean install
 
 run src/main/java/com/musearllm/api/MuseARLLMApplication.java by intellij 
 
+http://localhost:7773/api/???/???
+e.g. http://localhost:7773/api/artists/count
+http://localhost:7773/api/artists
+see \src\main\java\com\musearllm\api\controller to know what can call
