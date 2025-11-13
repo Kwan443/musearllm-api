@@ -12,6 +12,8 @@ public class Museum {
     private String description;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private JsonNode price;
+
 
     // Getters and Setters
     public UUID getMuseumId() { return museumId; }
@@ -22,6 +24,8 @@ public class Museum {
     public void setAddress(String address) { this.address = address; }
     public JsonNode getOperatingHours() { return operatingHours; }
     public void setOperatingHours(JsonNode operatingHours) { this.operatingHours = operatingHours; }
+    public JsonNode getPrice() { return price; }
+    public void setPrice(JsonNode price) { this.price = price; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
     public LocalDateTime getCreatedAt() { return createdAt; }

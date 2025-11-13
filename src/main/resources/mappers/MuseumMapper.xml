@@ -9,6 +9,7 @@
         <result property="description" column="description" jdbcType="VARCHAR"/>
         <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
         <result property="updatedAt" column="updated_at" jdbcType="TIMESTAMP"/>
+        <result property="price" column="price" javaType="com.fasterxml.jackson.databind.JsonNode" jdbcType="OTHER" typeHandler="com.musearllm.api.typehandler.JsonNodeTypeHandler"/>
     </resultMap>
 
     <insert id="insertMuseum" parameterType="com.musearllm.api.model.Museum">
@@ -20,7 +21,8 @@
         #{operatingHours, typeHandler=com.musearllm.api.typehandler.JsonNodeTypeHandler},
         #{description},
         #{createdAt},
-        #{updatedAt}
+        #{updatedAt},
+        #{price, typeHandler=com.musearllm.api.typehandler.JsonNodeTypeHandler}
         )
     </insert>
 
@@ -42,7 +44,8 @@
         address = #{address},
         operating_hours = #{operatingHours, typeHandler=com.musearllm.api.typehandler.JsonNodeTypeHandler},
         description = #{description},
-        updated_at = #{updatedAt}
+        updated_at = #{updatedAt},
+        #{price, typeHandler=com.musearllm.api.typehandler.JsonNodeTypeHandler}
         WHERE museum_id = #{museumId, typeHandler=com.musearllm.api.typehandler.UUIDTypeHandler}
     </update>
 
