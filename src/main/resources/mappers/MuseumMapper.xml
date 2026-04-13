@@ -13,7 +13,7 @@
     </resultMap>
 
     <insert id="insertMuseum" parameterType="com.musearllm.api.model.Museum">
-        INSERT INTO museum (museum_id, name, address, operating_hours, description, created_at, updated_at)
+        INSERT INTO museum (museum_id, name, address, operating_hours, description, created_at, updated_at, price)
         VALUES (
         #{museumId, typeHandler=com.musearllm.api.typehandler.UUIDTypeHandler},
         #{name},

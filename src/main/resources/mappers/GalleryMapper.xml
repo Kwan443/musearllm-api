@@ -3,6 +3,7 @@
 <mapper namespace="com.musearllm.api.mapper.GalleryMapper">
     <resultMap id="GalleryResultMap" type="com.musearllm.api.model.Gallery">
         <id property="galleryId" column="gallery_id" javaType="java.util.UUID" jdbcType="OTHER" typeHandler="com.musearllm.api.typehandler.UUIDTypeHandler"/>
+        <result property="museumId" column="museum_id" javaType="java.util.UUID" jdbcType="OTHER" typeHandler="com.musearllm.api.typehandler.UUIDTypeHandler"/>
         <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="floorNumber" column="floor_number" jdbcType="VARCHAR"/>
         <result property="description" column="description" jdbcType="VARCHAR"/>
@@ -11,9 +12,10 @@
     </resultMap>
 
     <insert id="insertGallery" parameterType="com.musearllm.api.model.Gallery">
-        INSERT INTO gallery (gallery_id, name, floor_number, description, created_at, updated_at)
+        INSERT INTO gallery (gallery_id, museum_id, name, floor_number, description, created_at, updated_at)
         VALUES (
         #{galleryId, typeHandler=com.musearllm.api.typehandler.UUIDTypeHandler},
+        #{museumId, typeHandler=com.musearllm.api.typehandler.UUIDTypeHandler},
         #{name},
         #{floorNumber},
         #{description},
